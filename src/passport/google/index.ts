@@ -6,7 +6,7 @@ import { GoogleUser } from './types';
 
 import('./passport-config');
 
-const { JWT_SECRET, COOKIE_NAME, CLIENT_ROOT_URL } = process.env;
+const { JWT_SECRET, COOKIE_NAME, CLIENT_ROOT_URL, NODE_ENV } = process.env;
 
 const router = express.Router();
 
@@ -18,7 +18,7 @@ router.get(`/callback`, passport.authenticate('google'), (req: Request, res: Res
   res.cookie(COOKIE_NAME as string, token, {
     maxAge: 900000,
     httpOnly: true,
-    secure: false,
+    secure: NODE_ENV !== 'development',
   });
 
   res.redirect(CLIENT_ROOT_URL as string);

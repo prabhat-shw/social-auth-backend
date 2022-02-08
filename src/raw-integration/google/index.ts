@@ -2,7 +2,7 @@ import express, { Request, Response } from 'express';
 import jwt from 'jsonwebtoken';
 import { getGoogleAuthURL, getTokens, getUser } from './helper';
 
-const { JWT_SECRET, COOKIE_NAME, CLIENT_ROOT_URL } = process.env;
+const { JWT_SECRET, COOKIE_NAME, CLIENT_ROOT_URL, NODE_ENV } = process.env;
 
 const router = express.Router();
 
@@ -33,11 +33,11 @@ router.get(`/callback`, async (req: Request, res: Response) => {
   */
   const googleUser = await getUser(access_token);
   const token = jwt.sign(googleUser, JWT_SECRET as string);
-
+  // this can be extracted out to a common place. keeping here for simplicity
   res.cookie(COOKIE_NAME as string, token, {
     maxAge: 900000,
     httpOnly: true,
-    secure: false,
+    secure: NODE_ENV !== 'development',
   });
 
   res.redirect(CLIENT_ROOT_URL as string);

@@ -2,7 +2,7 @@ import express, { Request, Response } from 'express';
 import jwt from 'jsonwebtoken';
 import { getGithubAuthURL, getTokens, getUser } from './helper';
 
-const { JWT_SECRET, COOKIE_NAME, CLIENT_ROOT_URL } = process.env;
+const { JWT_SECRET, COOKIE_NAME, CLIENT_ROOT_URL, NODE_ENV } = process.env;
 
 const router = express.Router();
 
@@ -24,7 +24,7 @@ router.get(`/callback`, async (req: Request, res: Response) => {
   res.cookie(COOKIE_NAME as string, token, {
     maxAge: 900000,
     httpOnly: true,
-    secure: false,
+    secure: NODE_ENV !== 'development',
   });
 
   res.redirect(CLIENT_ROOT_URL as string);
