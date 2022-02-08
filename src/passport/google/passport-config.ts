@@ -8,10 +8,6 @@ import { GoogleUser } from './types';
 const { SERVER_ROOT_URL, GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET, GOOGLE_REDIRECT_URI } =
   process.env;
 
-passport.serializeUser((user, cb) => {
-  cb(null, user);
-});
-
 passport.use(
   new GoogleStrategy(
     {
